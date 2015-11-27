@@ -5,7 +5,7 @@ import java.util.Date;
 public class DatosFacturas {
 	public DatosFacturas(String serie, int numeroFactura, String nit, String nombreFactura
 			,Date fecha, float monto, String tipoPago, String observaciones, String fechaFormato
-			){
+			,int codigoPago){
 		this.setSerie(serie);
 		this.setNumeroFactura(numeroFactura);
 		this.setNit(nit);
@@ -15,6 +15,7 @@ public class DatosFacturas {
 		this.setObservaciones(observaciones);
 		this.setTipoPago(tipoPago);
 		this.setFechaFormato(fechaFormato);
+		this.setCodigoPago(codigoPago);
 	}
 	public DatosFacturas(){}
 	private String serie;
@@ -26,7 +27,14 @@ public class DatosFacturas {
 	private String tipoPago;
 	private String observaciones;
 	private String fechaFormato;
+	private int codigoPago;
 	
+	public int getCodigoPago() {
+		return codigoPago;
+	}
+	public void setCodigoPago(int codigoPago) {
+		this.codigoPago = codigoPago;
+	}
 	/**
 	 * @return the fechaFormato
 	 */

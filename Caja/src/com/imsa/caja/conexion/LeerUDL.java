@@ -7,14 +7,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.util.HashMap;
 
-public class ConectarDB {
+public class LeerUDL {
 	
-	public Connection getConnection(){
-//		leer UDL
+	public LeerUDL(){}
+	
+	public static HashMap<String, String> datosConexion(){
+		
+		HashMap<String, String> datosConexion = new HashMap<String, String>();
 		BufferedReader reader=null;
 		String[] datos = new String[14];
 		String[] clave = new String[2];
@@ -70,22 +71,11 @@ public class ConectarDB {
 		usuario = user.split("=");
 		db = bd.split("=");
 		servidor = server.split("=");
-		Connection conectar = null;
-		try {
-			try {
-				Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				System.out.println("Error de Driver: " + e.getMessage());
-			}
-			
-			//RECORDAR QUE ESTE DEBE SACAR LA INFORMACION DEL UDL.
-			String url="jdbc:sqlserver://"+(String)servidor[1]+";databaseName="+(String)db[1]+";user="+ (String)usuario[1] + ";password=" + (String)clave[1] + ";";
-			conectar = DriverManager.getConnection(url);
-		} catch (SQLException sqlex) {
-			System.out.println("Error de SQL: " + sqlex.getMessage());
-		}
-		return conectar;
+		
+		datosConexion.put("usuario", usuario[1]);
+		datosConexion.put("clave", clave[1]);
+		datosConexion.put("servidor", servidor[1]);
+		datosConexion.put("db", db[1]);
+		return datosConexion;
 	}
 }
-

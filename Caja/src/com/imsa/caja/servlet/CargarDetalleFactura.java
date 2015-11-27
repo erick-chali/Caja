@@ -55,7 +55,9 @@ public class CargarDetalleFactura extends HttpServlet {
 		ResultSet rs = null;
 		ArrayList<DetalleFactura> lista = new ArrayList<DetalleFactura>();
 		request.getSession().setAttribute("serie", request.getParameter("serie"));
+		System.out.println("Serie " + (String)request.getSession().getAttribute("serie"));
 		request.getSession().setAttribute("numeroFactura", request.getParameter("numeroFactura"));
+		System.out.println("Factura " + (String)request.getSession().getAttribute("numeroFactura"));
 		try{
 			con = new ConectarDB().getConnection();
 			stmt = con.prepareCall("{call stp_S_clspv_facturas_detPago_clscj_pago_facturasRelated(?,?)}");
@@ -81,9 +83,6 @@ public class CargarDetalleFactura extends HttpServlet {
 				Connection con2 = null;
 				CallableStatement stmt2 = null;
 				ResultSet rs2 = null;
-				
-				
-				
 				DetalleFactura detalle = new DetalleFactura();
 				detalle.setCorrelativo(rs.getInt("correlativo"));
 				detalle.setCodigoProducto("");
@@ -101,6 +100,7 @@ public class CargarDetalleFactura extends HttpServlet {
 				detalle.setPrecio(rs.getFloat("precio"));
 				detalle.setPorDescuento(rs.getFloat("por_descuento"));
 				detalle.setDescuento(rs.getFloat("descuento"));
+				detalle.setTotalLinea(rs.getFloat("total_linea"));
 				con2 = new ConectarDB().getConnection();
 				stmt2 = con.prepareCall("{call pv_NombreBodega(?)}");
 				stmt2.setString(1, rs.getString("codigo_bodega"));
@@ -123,6 +123,7 @@ public class CargarDetalleFactura extends HttpServlet {
 				con2.close();
 				stmt2.close();
 				rs2.close();
+
 				lista.add(detalle);
 				
 			}
@@ -130,7 +131,9 @@ public class CargarDetalleFactura extends HttpServlet {
 			stmt.close();
 			rs.close();
 		}catch(SQLException e){
-			
+			response.setContentType("application/json");
+			response.getWriter().write(e.getMessage());
+			System.out.println(e.getMessage());
 		}
 		Gson gson = new Gson();
 		JsonElement elemento = gson.toJsonTree(lista, new TypeToken<List<DetalleFactura>>(){}.getType());

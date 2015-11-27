@@ -11,7 +11,7 @@
             return 'Cargando, espere por favor...';
         },
         formatRecordsPerPage: function (pageNumber) {
-            return pageNumber + ' registros por página';
+            return pageNumber + ' registros por p\u00E1gina';
         },
         formatShowingRows: function (pageFrom, pageTo, totalRows) {
             return 'Mostrando ' + pageFrom + ' a ' + pageTo + ' de ' + totalRows + ' filas';

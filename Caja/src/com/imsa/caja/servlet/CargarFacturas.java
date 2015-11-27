@@ -5,19 +5,22 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.ParseException;
+//import java.text.DateFormat;
+//import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+//import java.util.Date;
 import java.util.List;
 
+//import javax.naming.Context;
+//import javax.naming.InitialContext;
+//import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+//import javax.sql.DataSource;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -54,15 +57,24 @@ public class CargarFacturas extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+//		request.getRequestDispatcher("LeerUDL").forward(request, response); 
 		Connection con = null;
 		CallableStatement stmt = null;
 		ResultSet rs = null;
 		ArrayList<DatosFacturas> facturas = new ArrayList<>();
+//		Context contextoInicial;
+		
+		
 		try{
+//			contextoInicial = new InitialContext();
+//			Context contextoenv = (Context)contextoInicial.lookup("java:/comp/env");
+//			DataSource ds = (DataSource)contextoenv.lookup("jdbc/UsersDB");
+//			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+//			String url="jdbc:sqlserver://"+(String)request.getSession().getAttribute("servidorDB")+";databaseName="+(String)request.getSession().getAttribute("db")+";user="+ (String)request.getSession().getAttribute("usuarioDB") + ";password=" + (String)request.getSession().getAttribute("passDB") + ";";
+//			con = DriverManager.getConnection(url);
 			con = new ConectarDB().getConnection();
 			stmt = con.prepareCall("{call stp_SL_clscj_pago_facturas}");
 			rs = stmt.executeQuery();
-			
 			while(rs.next()){
 				DatosFacturas datos = new DatosFacturas();
 				datos.setSerie(rs.getString("serie"));
@@ -75,12 +87,17 @@ public class CargarFacturas extends HttpServlet {
 				datos.setObservaciones(rs.getString("Observaciones"));
 				SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
 				datos.setFechaFormato(formato.format(datos.getFecha()));
+				datos.setCodigoPago(rs.getInt("codigo_pago"));
 				facturas.add(datos);
 			}
+
+			con.close();
+			stmt.close();
+			rs.close();
 		}catch(SQLException e){
-			response.setContentType("text/html");
+			response.setContentType("application/json");
 			response.getWriter().write(e.getMessage());
-			System.out.println("Error: " + e.getMessage());
+			System.out.println("Error SQL clase CargarFacturas: " + e.getMessage());
 		}
 		Gson gson = new Gson();
 		JsonElement elemento = gson.toJsonTree(facturas, new TypeToken<List<DatosFacturas>>(){}.getType());
@@ -88,17 +105,17 @@ public class CargarFacturas extends HttpServlet {
 		
 		response.setContentType("application/json");
 		
-		try {
-			String fecha = "27/09/2015";
-			DateFormat formatoOriginal = new SimpleDateFormat("dd/MM/yyyy");
-			Date date = formatoOriginal.parse(fecha);
+//		try {
+//			String fecha = "27/09/2015";
+//			DateFormat formatoOriginal = new SimpleDateFormat("dd/MM/yyyy");
+//			Date date = formatoOriginal.parse(fecha);
 //			System.out.println(new java.sql.Timestamp(date.getTime()));
-			java.sql.Date fecha2 = new java.sql.Date(date.getTime());
-			System.out.println(new java.sql.Timestamp(fecha2.getTime()));
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//			java.sql.Date fecha2 = new java.sql.Date(date.getTime());
+//			System.out.println(new java.sql.Timestamp(fecha2.getTime()));
+//		} catch (ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
 		facturas = null;
 		response.getWriter().print(arreglo);

@@ -1,8 +1,7 @@
 
 body {
 	width: 100%;
-  padding-bottom: 40px;
-  background-color: #eee;
+  	background-color: #eee;
 }
 .form-signin {
   max-width: 425px;
@@ -33,22 +32,11 @@ body {
   border-top-right-radius: 0;
 }
 #container{
-	max-width: 98%;
+	max-width: 99%;
 }
 #tablaFacturas tbody tr:hover{
 	background-color: #ffffaa;
 }
 #tablaDetalleFacturas tbody tr:hover{
 	background-color: #ffffaa;
-}
-.facturasDetalladas{
-	max-height: 600px;
-	max-width: inherit;
-	overflow: scroll;
-}
-#tablaDetalleFacturas tr td:nth-child(2) {
-	width: 700px;
-}
-#tablaDetalleFacturas tr td:nth-child(9) {
-	width: 600px;
 }

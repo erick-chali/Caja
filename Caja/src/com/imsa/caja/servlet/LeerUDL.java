@@ -1,4 +1,4 @@
-package com.imsa.caja.conexion;
+package com.imsa.caja.servlet;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -7,14 +7,41 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 
-public class ConectarDB {
-	
-	public Connection getConnection(){
-//		leer UDL
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * Servlet implementation class LeerUDL
+ */
+@WebServlet("/LeerUDL")
+public class LeerUDL extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public LeerUDL() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		doPost(request, response);
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
 		BufferedReader reader=null;
 		String[] datos = new String[14];
 		String[] clave = new String[2];
@@ -70,22 +97,15 @@ public class ConectarDB {
 		usuario = user.split("=");
 		db = bd.split("=");
 		servidor = server.split("=");
-		Connection conectar = null;
-		try {
-			try {
-				Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				System.out.println("Error de Driver: " + e.getMessage());
-			}
-			
-			//RECORDAR QUE ESTE DEBE SACAR LA INFORMACION DEL UDL.
-			String url="jdbc:sqlserver://"+(String)servidor[1]+";databaseName="+(String)db[1]+";user="+ (String)usuario[1] + ";password=" + (String)clave[1] + ";";
-			conectar = DriverManager.getConnection(url);
-		} catch (SQLException sqlex) {
-			System.out.println("Error de SQL: " + sqlex.getMessage());
-		}
-		return conectar;
+		request.getSession().setAttribute("servidorDB", (String)servidor[1]);
+		request.getSession().setAttribute("usuarioDB", (String)usuario[1]);
+		request.getSession().setAttribute("passDB", (String)clave[1]);
+		request.getSession().setAttribute("db", (String)db[1]);
+		System.out.println((String)request.getSession().getAttribute("servidorDB"));
+		System.out.println((String)request.getSession().getAttribute("usuarioDB"));
+		System.out.println((String)request.getSession().getAttribute("passDB"));
+		System.out.println((String)request.getSession().getAttribute("db"));
+		
 	}
-}
 
+}
